@@ -1,0 +1,1 @@
+# curriculum_00_ai_shunsuke-nishimori
