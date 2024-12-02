@@ -1,0 +1,1 @@
+./semester | grep "last-modified:" | cut -d ' ' -f 2- > ~/last-modified.txt
