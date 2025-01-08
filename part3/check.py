@@ -11,13 +11,17 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 JOB_ID = "ftjob-rVtQRdpeyJ82HRyktZymh8ee"  # ここを実際のジョブIDに変更
 
 def check_job_status(job_id):
-    """ジョブのステータスを確認する"""
-    print(f"ジョブ {job_id} のステータスを確認しています...")
     try:
         response = client.fine_tuning.jobs.retrieve(job_id)
-        status = response['status']
-        print(f"現在のジョブステータス: {status}")
-        return status, response.get("fine_tuned_model")
+        
+        # ステータスとファインチューニング済みモデル名を取得
+        status = response.status  # response["status"]ではなくresponse.status
+        fine_tuned_model = response.fine_tuned_model  # response["fine_tuned_model"]ではなくresponse.fine_tuned_model
+        
+        print(f"ジョブステータス: {status}")
+        if fine_tuned_model:
+            print(f"ファインチューニング済みモデル名: {fine_tuned_model}")
+        return status, fine_tuned_model
     except Exception as e:
         print(f"ジョブステータス確認エラー: {e}")
         return None, None
@@ -37,10 +41,6 @@ def wait_for_job_completion(job_id):
 
 def use_fine_tuned_model(model_name):
     """ファインチューニング済みモデルを使用する"""
-    if not model_name:
-        print("モデル名が無効です。")
-        return
-
     print(f"ファインチューニング済みモデル '{model_name}' を使用しています...")
     try:
         response = client.chat.completions.create(
@@ -50,8 +50,9 @@ def use_fine_tuned_model(model_name):
                 {"role": "user", "content": "UTTCのValueを3つ挙げてください。"}
             ]
         )
+        # 正しい方法で応答を取得
         print("モデルの応答:")
-        print(response['choices'][0]['message']['content'])
+        print(response.choices[0].message.content)  # 正しいアクセス方法
     except Exception as e:
         print(f"モデル利用エラー: {e}")
 
