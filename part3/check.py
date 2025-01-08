@@ -39,16 +39,26 @@ def wait_for_job_completion(job_id):
         print("ジョブがまだ完了していません。30秒後に再確認します...")
         time.sleep(30)
 
-def use_fine_tuned_model(model_name):
+messages1 = [
+    {"role": "system", "content": "UTTCに関する質問に回答します。"},
+    {"role": "user", "content": "UTTCのValueを3つ挙げてください。"}
+            ]
+messages2 = [
+    {"role": "system", "content": "UTTCに関する質問に回答します。"},
+    {"role": "user", "content": "UTTCに入るメリットはなんですか？"}
+]
+messages3 = [
+    {"role": "system", "content": "UTTCに関する質問に回答します。"},
+    {"role": "user", "content": "UTTCのスポンサーはどこですか?"}
+]
+
+def use_fine_tuned_model(model_name, messages):
     """ファインチューニング済みモデルを使用する"""
     print(f"ファインチューニング済みモデル '{model_name}' を使用しています...")
     try:
         response = client.chat.completions.create(
             model=model_name,
-            messages=[
-                {"role": "system", "content": "UTTCに関する質問に回答します。"},
-                {"role": "user", "content": "UTTCのValueを3つ挙げてください。"}
-            ]
+            messages=messages
         )
         # 正しい方法で応答を取得
         print("モデルの応答:")
@@ -62,7 +72,13 @@ def main():
     
     if fine_tuned_model:
         # モデルを使用する
-        use_fine_tuned_model(fine_tuned_model)
+        print("UTTCに関する質問に回答します...")
+        print("質問1: UTTCのValueを3つ挙げてください。")
+        use_fine_tuned_model(fine_tuned_model, messages1)
+        print("質問2: UTTCに入るメリットはなんですか？")
+        use_fine_tuned_model(fine_tuned_model, messages2)
+        print("質問3: UTTCのスポンサーはどこですか?")
+        use_fine_tuned_model(fine_tuned_model, messages3)
     else:
         print("ジョブが成功しなかったため、モデルを使用できません。")
 
