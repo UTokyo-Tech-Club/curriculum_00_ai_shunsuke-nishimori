@@ -8,15 +8,15 @@ load_dotenv(".env")
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 # ファインチューニングジョブのIDを指定
-JOB_ID = "ftjob-rVtQRdpeyJ82HRyktZymh8ee"  # ここを実際のジョブIDに変更
+JOB_ID = "ftjob-rVtQRdpeyJ82HRyktZymh8ee"
 
 def check_job_status(job_id):
     try:
         response = client.fine_tuning.jobs.retrieve(job_id)
         
         # ステータスとファインチューニング済みモデル名を取得
-        status = response.status  # response["status"]ではなくresponse.status
-        fine_tuned_model = response.fine_tuned_model  # response["fine_tuned_model"]ではなくresponse.fine_tuned_model
+        status = response.status
+        fine_tuned_model = response.fine_tuned_model
         
         print(f"ジョブステータス: {status}")
         if fine_tuned_model:
@@ -62,7 +62,7 @@ def use_fine_tuned_model(model_name, messages):
         )
         # 正しい方法で応答を取得
         print("モデルの応答:")
-        print(response.choices[0].message.content)  # 正しいアクセス方法
+        print(response.choices[0].message.content)
     except Exception as e:
         print(f"モデル利用エラー: {e}")
 
