@@ -9,3 +9,28 @@ services:
     volumes:
       - .:/app
     command: uv run --with jupyter jupyter lab --ip=0.0.0.0 --no-browser --allow-root
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=username
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=vector_db
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:14
+    container_name: postgres_vector
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: vector_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: always
+
+volumes:
+  postgres_data:
