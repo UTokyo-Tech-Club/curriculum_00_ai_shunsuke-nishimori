@@ -9,7 +9,7 @@ services:
       - 8000:8000  # ホストマシンのポート8000を、docker内のポート8000に接続する
   db:
     image: mysql:8.0
-    platform: linux/arm64  # M1 Macの場合必要
+    platform: linux/amd64
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'  # rootアカウントをパスワードなしで作成
       MYSQL_DATABASE: 'demo'  # 初期データベースとしてdemoを設定
