@@ -1,5 +1,6 @@
 # python3.9のイメージをダウンロード
-FROM python:3.9-buster
+# FROM python:3.9-buster
+FROM --platform=linux/arm64 python:3.10-slim
 ENV PYTHONUNBUFFERED=1
 
 WORKDIR /src
