@@ -18,5 +18,4 @@ RUN if [ -f pyproject.toml ]; then poetry install --no-root; fi
 COPY . .
 
 # postリクエストを送るとchatgptによる返答を返すappを起動
-# CMD [".venv/bin/uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD [".dockervenv/bin/uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
