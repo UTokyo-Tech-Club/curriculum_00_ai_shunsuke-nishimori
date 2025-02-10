@@ -45,3 +45,8 @@ async def chat_api(request: ChatRequest):
     input = request.input
     output = chat(input)
     return ChatResponse(input=input, output=output)
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8080))  # Cloud Run の環境変数PORTを取得
+    print(f"Starting server on port {port}...")  # ログ出力で確認
+    uvicorn.run(app, host="0.0.0.0", port=port)
