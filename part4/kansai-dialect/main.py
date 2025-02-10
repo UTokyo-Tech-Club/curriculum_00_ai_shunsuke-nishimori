@@ -6,6 +6,7 @@ import time
 import os
 from dotenv import load_dotenv
 from pydantic import BaseModel
+import uvicorn
 
 # 環境変数からAPIキーを読み込む
 load_dotenv(verbose=True)
@@ -44,3 +45,8 @@ async def chat_api(request: ChatRequest):
     input = request.input
     output = chat(input)
     return ChatResponse(input=input, output=output)
+
+# main.py実行時
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8080))
+    uvicorn.run(app, host="0.0.0.0", port=port)
