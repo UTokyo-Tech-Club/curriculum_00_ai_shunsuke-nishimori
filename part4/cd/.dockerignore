@@ -1,0 +1,11 @@
+# 不要なディレクトリ・ファイルを除外
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.env
+*.log
+data/large_files/  # 必要な場合は、不要な大きなファイルを指定
+.git
+.gitignore

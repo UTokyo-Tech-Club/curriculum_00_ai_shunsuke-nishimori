@@ -1,0 +1,9 @@
+version: '3'
+services:
+  kansai-dialect:
+    build: .
+    volumes:
+      - .dockervenv:/src/.venv
+      - .:/src
+    ports:
+      - 8080:8080  # ホストマシンのポート8080を、docker内のポート8080に接続する
