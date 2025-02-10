@@ -1,5 +1,6 @@
-from pydantic import BaseModel
+# api/schemas/done.py
 
+from pydantic import BaseModel
 
 class DoneResponse(BaseModel):
     id: int

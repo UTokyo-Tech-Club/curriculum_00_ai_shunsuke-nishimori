@@ -1,3 +1,5 @@
+# tests/test_main.py
+
 import pytest, pytest_asyncio
 from httpx import AsyncClient, ASGITransport
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
@@ -10,7 +12,6 @@ from api.main import app
 
 ASYNC_DB_URL = "sqlite+aiosqlite:///:memory:"
 
-
 @pytest_asyncio.fixture
 async def async_client() -> AsyncClient:
     # Async用のengineとsessionを作成
@@ -19,7 +20,7 @@ async def async_client() -> AsyncClient:
         autocommit=False, autoflush=False, bind=async_engine, class_=AsyncSession
     )
 
-    # テスト用にオンメモリのSQLiteテーブルを初期化（関数ごとにリセット）
+    # テスト用にオンメモリのSQLiteテーブルを初期化
     async with async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
@@ -31,33 +32,30 @@ async def async_client() -> AsyncClient:
 
     app.dependency_overrides[get_db] = get_test_db
 
-    # テスト用に非同期HTTPクライアントを返却
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         yield client
 
-
 @pytest.mark.asyncio
 async def test_create_and_read(async_client):
-    response = await async_client.post("/tasks", json={"title": "テストタスク"})
+    response = await async_client.post("/tasks", json={"query": "低カロリーな晩御飯の提案をして"})
     assert response.status_code == starlette.status.HTTP_200_OK
     response_obj = response.json()
-    assert response_obj["title"] == "テストタスク"
+    assert response_obj["query"] == "低カロリーな晩御飯の提案をして"
 
     response = await async_client.get("/tasks")
     assert response.status_code == starlette.status.HTTP_200_OK
     response_obj = response.json()
     assert len(response_obj) == 1
-    assert response_obj[0]["title"] == "テストタスク"
+    assert response_obj[0]["query"] == "低カロリーな晩御飯の提案をして"
     assert response_obj[0]["done"] is False
-
 
 @pytest.mark.asyncio
 async def test_done_flag(async_client):
-    response = await async_client.post("/tasks", json={"title": "テストタスク2"})
+    response = await async_client.post("/tasks", json={"query": "テストタスク2"})
     assert response.status_code == starlette.status.HTTP_200_OK
     response_obj = response.json()
-    assert response_obj["title"] == "テストタスク2"
+    assert response_obj["query"] == "テストタスク2"
 
     # 完了フラグを立てる
     response = await async_client.put("/tasks/1/done")
