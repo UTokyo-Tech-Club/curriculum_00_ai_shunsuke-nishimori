@@ -39,8 +39,8 @@ def chat(input: str):
     )
     return response.choices[0].message.content
 
-@app.post("/chat")
-def chat_api(request: ChatRequest):
+@app.post("/chat", response_model=ChatResponse)
+async def chat_api(request: ChatRequest):
     input = request.input
     output = chat(input)
     return ChatResponse(input=input, output=output)
